@@ -3,17 +3,36 @@
   "id": "datalib-core",
   "version": "${version}",
   "name": "DataLib Core",
-  "description": "Core engine and state management for DataLib.",
+  "description": "Datapack framework engine — create, manage, and extend datapacks in-game with DataLib dependency support.",
 
   "entrypoints": {
     "main": [
       "runtoolkit.datalib.core.DataLibCore"
+    ],
+    "client": [
+      "runtoolkit.datalib.core.DataLibClient"
+    ],
+    "modmenu": [
+      "runtoolkit.datalib.modmenu.DataLibModMenuIntegration"
     ]
   },
 
   "depends": {
-    "fabricloader": ">=0.16.10",
-    "minecraft": "~1.21.1",
+    "fabricloader": ">=0.16.14",
+    "minecraft": "~1.21.8",
     "fabric-api": "*"
+  },
+
+  "suggests": {
+    "modmenu": "*"
+  },
+
+  "custom": {
+    "modmenu": {
+      "links": {
+        "modmenu.source": "https://github.com/asn44nb/dataLib-main"
+      },
+      "badges": ["library"]
+    }
   }
 }

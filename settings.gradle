@@ -1,7 +1,7 @@
 pluginManagement {
     def props = new Properties()
     file("gradle.properties").withInputStream { props.load(it) }
-    def loomVersion = props.getProperty("loom_version", "1.8.9")
+    def loomVersion = props.getProperty("loom_version", "1.11-SNAPSHOT")
 
     plugins {
         id 'fabric-loom' version loomVersion
