@@ -30,25 +30,21 @@ public class CreateDatapackScreen extends Screen {
         int centerX = this.width / 2;
         int startY = this.height / 4;
 
-        // Pack name field
         nameField = new TextFieldWidget(this.textRenderer, centerX - 100, startY, 200, 20, Text.literal("Pack Name"));
         nameField.setPlaceholder(Text.literal("§7my_datapack"));
         nameField.setMaxLength(64);
         this.addDrawableChild(nameField);
 
-        // Description field
         descField = new TextFieldWidget(this.textRenderer, centerX - 100, startY + 40, 200, 20, Text.literal("Description"));
         descField.setPlaceholder(Text.literal("§7A DataLib datapack"));
         descField.setMaxLength(256);
         this.addDrawableChild(descField);
 
-        // Create button
         this.addDrawableChild(ButtonWidget.builder(
                 Text.literal("§a✔ Create"),
                 btn -> onCreate()
         ).dimensions(centerX - 100, startY + 80, 95, 20).build());
 
-        // Cancel button
         this.addDrawableChild(ButtonWidget.builder(
                 Text.literal("§cCancel"),
                 btn -> this.close()
@@ -64,12 +60,8 @@ public class CreateDatapackScreen extends Screen {
             nameField.setEditableColor(0xFF5555);
             return;
         }
-        // Sanitize name: only lowercase, numbers, underscores
         name = name.toLowerCase().replaceAll("[^a-z0-9_]", "_");
-
-        if (desc.isEmpty()) {
-            desc = "A DataLib managed datapack";
-        }
+        if (desc.isEmpty()) desc = "A DataLib managed datapack";
 
         processing = true;
         progressOverlay.reset();
@@ -80,7 +72,6 @@ public class CreateDatapackScreen extends Screen {
         String finalName = name;
         String finalDesc = desc;
 
-        // Run in a separate thread to allow progress bar animation
         Thread worker = new Thread(() -> {
             DatapackGenerator.createDatapack(
                     client.getServer(), finalName, finalDesc,
@@ -93,18 +84,15 @@ public class CreateDatapackScreen extends Screen {
 
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
-        this.renderBackground(context, mouseX, mouseY, delta);
+        super.render(context, mouseX, mouseY, delta);
 
         context.drawCenteredTextWithShadow(this.textRenderer,
                 Text.literal("§a§lCreate Datapack"), this.width / 2, 20, 0xFFFFFF);
 
-        // Labels
         int centerX = this.width / 2;
         int startY = this.height / 4;
         context.drawTextWithShadow(this.textRenderer, Text.literal("§fPack Name:"), centerX - 100, startY - 12, 0xFFFFFF);
         context.drawTextWithShadow(this.textRenderer, Text.literal("§fDescription:"), centerX - 100, startY + 28, 0xFFFFFF);
-
-        super.render(context, mouseX, mouseY, delta);
 
         if (processing) {
             progressOverlay.render(context, this.width, this.height);

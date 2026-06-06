@@ -4,6 +4,7 @@
   "version": "${version}",
   "name": "DataLib Core",
   "description": "Datapack framework engine — create, manage, and extend datapacks in-game with DataLib dependency support.",
+  "icon": "assets/datalib-core/icon.png",
 
   "entrypoints": {
     "main": [

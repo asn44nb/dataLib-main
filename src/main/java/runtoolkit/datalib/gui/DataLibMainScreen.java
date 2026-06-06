@@ -14,7 +14,7 @@ public class DataLibMainScreen extends Screen {
     private final Screen parent;
 
     public DataLibMainScreen(Screen parent) {
-        super(Text.literal("§b§lDataLib §f— Datapack Manager"));
+        super(Text.literal("DataLib — Datapack Manager"));
         this.parent = parent;
     }
 
@@ -71,15 +71,15 @@ public class DataLibMainScreen extends Screen {
 
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
-        this.renderBackground(context, mouseX, mouseY, delta);
+        // In 1.21.8, super.render already handles background blur.
+        // Do NOT call renderBackground separately — causes "Can only blur once per frame".
+        super.render(context, mouseX, mouseY, delta);
 
-        // Title
+        // Title drawn AFTER super.render so it appears on top of widgets
         context.drawCenteredTextWithShadow(this.textRenderer,
                 Text.literal("§b§lDataLib §7— §fDatapack Framework Manager"), this.width / 2, 20, 0xFFFFFF);
         context.drawCenteredTextWithShadow(this.textRenderer,
                 Text.literal("§7v6.0.0 for Minecraft 1.21.8"), this.width / 2, 34, 0x888888);
-
-        super.render(context, mouseX, mouseY, delta);
     }
 
     @Override

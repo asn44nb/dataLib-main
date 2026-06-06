@@ -37,19 +37,16 @@ public class ConfigScreen extends Screen {
         int centerX = this.width / 2;
         int bottomY = this.height - 40;
 
-        // Value field
         valueField = new TextFieldWidget(this.textRenderer, centerX - 100, bottomY - 50, 200, 20, Text.literal("Value"));
         valueField.setPlaceholder(Text.literal("§7Enter new value..."));
         valueField.setMaxLength(256);
         this.addDrawableChild(valueField);
 
-        // Save button
         this.addDrawableChild(ButtonWidget.builder(
                 Text.literal("§a✔ Save"),
                 btn -> onSave()
         ).dimensions(centerX - 105, bottomY - 22, 100, 20).build());
 
-        // Back button
         this.addDrawableChild(ButtonWidget.builder(
                 Text.literal("§cBack"),
                 btn -> this.close()
@@ -66,7 +63,6 @@ public class ConfigScreen extends Screen {
         DataLibConfig config = DataLibCore.getInstance().getConfig();
         config.set(key, value);
 
-        // Refresh
         entries = new ArrayList<>(config.getAll().entrySet());
     }
 
@@ -89,7 +85,7 @@ public class ConfigScreen extends Screen {
 
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
-        this.renderBackground(context, mouseX, mouseY, delta);
+        super.render(context, mouseX, mouseY, delta);
 
         context.drawCenteredTextWithShadow(this.textRenderer,
                 Text.literal("§7§lDataLib Configuration"), this.width / 2, 15, 0xFFFFFF);
@@ -100,7 +96,6 @@ public class ConfigScreen extends Screen {
         int listY = 55;
         int entryHeight = 22;
 
-        // Header
         context.drawTextWithShadow(this.textRenderer, Text.literal("§eKey"), listX, 44, 0xFFFF55);
         context.drawTextWithShadow(this.textRenderer, Text.literal("§bValue"), listX + 160, 44, 0x55FFFF);
 
@@ -118,11 +113,8 @@ public class ConfigScreen extends Screen {
                     Text.literal("§b" + entry.getValue()), listX + 164, entryY + 5, 0x55FFFF);
         }
 
-        // Label for value field
         context.drawTextWithShadow(this.textRenderer, Text.literal("§fNew Value:"),
                 this.width / 2 - 100, this.height - 102, 0xFFFFFF);
-
-        super.render(context, mouseX, mouseY, delta);
     }
 
     @Override

@@ -38,13 +38,11 @@ public class AddDependencyScreen extends Screen {
         int centerX = this.width / 2;
         int bottomY = this.height - 40;
 
-        // Back button
         this.addDrawableChild(ButtonWidget.builder(
                 Text.literal("§cBack"),
                 btn -> this.close()
         ).dimensions(centerX - 105, bottomY, 100, 20).build());
 
-        // Add Dependency button
         this.addDrawableChild(ButtonWidget.builder(
                 Text.literal("§a✔ Add Dependency"),
                 btn -> onConfirm()
@@ -119,7 +117,7 @@ public class AddDependencyScreen extends Screen {
 
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
-        this.renderBackground(context, mouseX, mouseY, delta);
+        super.render(context, mouseX, mouseY, delta);
 
         context.drawCenteredTextWithShadow(this.textRenderer,
                 Text.literal("§e§lAdd DataLib Dependency"), this.width / 2, 15, 0xFFFFFF);
@@ -127,7 +125,6 @@ public class AddDependencyScreen extends Screen {
                 Text.literal("§7Select a datapack and confirm to add datalib:engine dependency"),
                 this.width / 2, 30, 0x888888);
 
-        // Datapack list
         int listX = this.width / 2 - 120;
         int listY = 60;
         int entryHeight = 22;
@@ -146,24 +143,19 @@ public class AddDependencyScreen extends Screen {
             int entryY = listY + i * entryHeight;
             boolean selected = idx == selectedIndex;
 
-            // Entry background
             context.fill(listX, entryY, listX + 240, entryY + entryHeight - 2,
                     selected ? 0xFF335599 : 0xFF222222);
 
-            // Pack name
             String label = (pack.managed() ? "§a[M] " : "§7[U] ") + "§f" + pack.name();
             if (pack.hasDataLibDependency()) label += " §b[DL]";
             context.drawTextWithShadow(this.textRenderer, Text.literal(label), listX + 4, entryY + 5, 0xFFFFFF);
         }
 
-        // Confirm prompt
         if (confirmMode && selectedIndex >= 0 && selectedIndex < datapacks.size()) {
             context.drawCenteredTextWithShadow(this.textRenderer,
                     Text.literal("§eClick 'Add Dependency' again to confirm for: §b" + datapacks.get(selectedIndex).name()),
                     this.width / 2, this.height - 60, 0xFFFF55);
         }
-
-        super.render(context, mouseX, mouseY, delta);
 
         if (processing) {
             progressOverlay.render(context, this.width, this.height);

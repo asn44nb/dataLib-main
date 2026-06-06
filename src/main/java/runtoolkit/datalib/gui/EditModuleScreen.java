@@ -14,8 +14,6 @@ import java.util.List;
 
 /**
  * Screen for editing existing modules in a datapack.
- * User selects a pack, selects a module, edits its content,
- * presses save, progress bar runs, then returns to main menu.
  */
 public class EditModuleScreen extends Screen {
 
@@ -43,19 +41,16 @@ public class EditModuleScreen extends Screen {
         int centerX = this.width / 2;
         int inputY = this.height - 90;
 
-        // Content field
         contentField = new TextFieldWidget(this.textRenderer, centerX - 150, inputY, 300, 20, Text.literal("Content"));
         contentField.setPlaceholder(Text.literal("§7New content..."));
         contentField.setMaxLength(2048);
         this.addDrawableChild(contentField);
 
-        // Save button
         this.addDrawableChild(ButtonWidget.builder(
                 Text.literal("§a✔ Save"),
                 btn -> onSave()
         ).dimensions(centerX - 105, inputY + 30, 100, 20).build());
 
-        // Cancel button
         this.addDrawableChild(ButtonWidget.builder(
                 Text.literal("§cCancel"),
                 btn -> this.close()
@@ -115,19 +110,17 @@ public class EditModuleScreen extends Screen {
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (!processing) {
             int halfWidth = this.width / 2;
-
-            // Pack list (left side)
-            int packListX = 20;
             int listY = 50;
             int entryHeight = 18;
-            int maxPackVisible = Math.min(datapacks.size(), (this.height - 150) / entryHeight);
 
+            // Pack list (left side)
+            int maxPackVisible = Math.min(datapacks.size(), (this.height - 150) / entryHeight);
             for (int i = 0; i < maxPackVisible; i++) {
                 int idx = i + packScrollOffset;
                 if (idx >= datapacks.size()) break;
 
                 int entryY = listY + i * entryHeight;
-                if (mouseX >= packListX && mouseX <= packListX + halfWidth - 30
+                if (mouseX >= 20 && mouseX <= halfWidth - 10
                         && mouseY >= entryY && mouseY <= entryY + entryHeight) {
                     selectedPackIndex = idx;
                     loadModules();
@@ -136,19 +129,16 @@ public class EditModuleScreen extends Screen {
             }
 
             // Module list (right side)
-            int moduleListX = halfWidth + 10;
             int maxModVisible = Math.min(modules.size(), (this.height - 150) / entryHeight);
-
             for (int i = 0; i < maxModVisible; i++) {
                 int idx = i + moduleScrollOffset;
                 if (idx >= modules.size()) break;
 
                 int entryY = listY + i * entryHeight;
-                if (mouseX >= moduleListX && mouseX <= moduleListX + halfWidth - 30
+                if (mouseX >= halfWidth + 10 && mouseX <= this.width - 20
                         && mouseY >= entryY && mouseY <= entryY + entryHeight) {
                     selectedModuleIndex = idx;
 
-                    // Load content into field
                     MinecraftClient client = MinecraftClient.getInstance();
                     if (client.getServer() != null && selectedPackIndex >= 0) {
                         String content = DatapackGenerator.readModule(client.getServer(),
@@ -182,7 +172,7 @@ public class EditModuleScreen extends Screen {
 
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
-        this.renderBackground(context, mouseX, mouseY, delta);
+        super.render(context, mouseX, mouseY, delta);
 
         context.drawCenteredTextWithShadow(this.textRenderer,
                 Text.literal("§6§lEdit Module"), this.width / 2, 15, 0xFFFFFF);
@@ -194,13 +184,9 @@ public class EditModuleScreen extends Screen {
         int listY = 50;
         int entryHeight = 18;
 
-        // Left column header
         context.drawTextWithShadow(this.textRenderer, Text.literal("§eDatapacks"), 20, 40, 0xFFFF55);
-
-        // Right column header
         context.drawTextWithShadow(this.textRenderer, Text.literal("§bModules"), halfWidth + 10, 40, 0x55FFFF);
 
-        // Pack list
         int maxPackVisible = Math.min(datapacks.size(), (this.height - 150) / entryHeight);
         for (int i = 0; i < maxPackVisible; i++) {
             int idx = i + packScrollOffset;
@@ -215,7 +201,6 @@ public class EditModuleScreen extends Screen {
                     Text.literal("§f" + datapacks.get(idx).name()), 24, entryY + 4, 0xFFFFFF);
         }
 
-        // Module list
         int maxModVisible = Math.min(modules.size(), (this.height - 150) / entryHeight);
         for (int i = 0; i < maxModVisible; i++) {
             int idx = i + moduleScrollOffset;
@@ -235,11 +220,8 @@ public class EditModuleScreen extends Screen {
                     Text.literal("§7No modules"), halfWidth + 14, listY + 4, 0x888888);
         }
 
-        // Content label
         int inputY = this.height - 90;
         context.drawTextWithShadow(this.textRenderer, Text.literal("§fContent:"), this.width / 2 - 150, inputY - 12, 0xFFFFFF);
-
-        super.render(context, mouseX, mouseY, delta);
 
         if (processing) {
             progressOverlay.render(context, this.width, this.height);

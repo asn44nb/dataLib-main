@@ -13,14 +13,13 @@ import java.util.List;
 
 /**
  * Screen for deleting modules, dependencies, or entire datapacks.
- * Shows a progress bar for every delete operation, then returns to main menu.
  */
 public class DeleteScreen extends Screen {
 
     private enum DeleteMode {
         MODULE("Delete Module"),
-        DEPENDENCY("Remove DataLib Dependency"),
-        DATAPACK("Delete Entire Datapack");
+        DEPENDENCY("Remove Dependency"),
+        DATAPACK("Delete Datapack");
 
         final String label;
         DeleteMode(String label) { this.label = label; }
@@ -68,13 +67,11 @@ public class DeleteScreen extends Screen {
             ).dimensions(centerX - 120 + mode.ordinal() * (tabWidth + 4), tabY, tabWidth, 16).build());
         }
 
-        // Delete button
         this.addDrawableChild(ButtonWidget.builder(
                 Text.literal("§c✖ Delete"),
                 btn -> onDelete()
         ).dimensions(centerX + 5, bottomY, 100, 20).build());
 
-        // Back button
         this.addDrawableChild(ButtonWidget.builder(
                 Text.literal("§7Back"),
                 btn -> this.close()
@@ -152,19 +149,17 @@ public class DeleteScreen extends Screen {
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (!processing) {
-            int listX = 20;
+            int halfWidth = this.width / 2;
             int listY = 75;
             int entryHeight = 18;
-            int halfWidth = this.width / 2;
 
-            // Pack list
             int maxPackVisible = Math.min(datapacks.size(), (this.height - 140) / entryHeight);
             for (int i = 0; i < maxPackVisible; i++) {
                 int idx = i + scrollOffset;
                 if (idx >= datapacks.size()) break;
 
                 int entryY = listY + i * entryHeight;
-                if (mouseX >= listX && mouseX <= halfWidth - 10
+                if (mouseX >= 20 && mouseX <= halfWidth - 10
                         && mouseY >= entryY && mouseY <= entryY + entryHeight) {
                     selectedPackIndex = idx;
                     confirmMode = false;
@@ -175,7 +170,6 @@ public class DeleteScreen extends Screen {
                 }
             }
 
-            // Module list (only in MODULE mode)
             if (currentMode == DeleteMode.MODULE) {
                 int moduleListX = halfWidth + 10;
                 int maxModVisible = Math.min(modules.size(), (this.height - 140) / entryHeight);
@@ -214,7 +208,7 @@ public class DeleteScreen extends Screen {
 
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
-        this.renderBackground(context, mouseX, mouseY, delta);
+        super.render(context, mouseX, mouseY, delta);
 
         context.drawCenteredTextWithShadow(this.textRenderer,
                 Text.literal("§c§lDelete — §f" + currentMode.label), this.width / 2, 15, 0xFFFFFF);
@@ -226,10 +220,8 @@ public class DeleteScreen extends Screen {
         int listY = 75;
         int entryHeight = 18;
 
-        // Pack list header
         context.drawTextWithShadow(this.textRenderer, Text.literal("§eDatapacks"), 20, 65, 0xFFFF55);
 
-        // Pack list
         int maxPackVisible = Math.min(datapacks.size(), (this.height - 140) / entryHeight);
         for (int i = 0; i < maxPackVisible; i++) {
             int idx = i + scrollOffset;
@@ -248,7 +240,6 @@ public class DeleteScreen extends Screen {
             context.drawTextWithShadow(this.textRenderer, Text.literal(label), 24, entryY + 4, 0xFFFFFF);
         }
 
-        // Module list (only in MODULE mode)
         if (currentMode == DeleteMode.MODULE) {
             context.drawTextWithShadow(this.textRenderer, Text.literal("§bModules"), halfWidth + 10, 65, 0x55FFFF);
 
@@ -272,7 +263,6 @@ public class DeleteScreen extends Screen {
             }
         }
 
-        // Confirm prompt
         if (confirmMode) {
             String target = "";
             if (currentMode == DeleteMode.MODULE && selectedModuleIndex >= 0 && selectedModuleIndex < modules.size()) {
@@ -284,8 +274,6 @@ public class DeleteScreen extends Screen {
                     Text.literal("§c⚠ Click Delete again to confirm: §f" + target),
                     this.width / 2, this.height - 60, 0xFF5555);
         }
-
-        super.render(context, mouseX, mouseY, delta);
 
         if (processing) {
             progressOverlay.render(context, this.width, this.height);
