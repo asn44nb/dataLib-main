@@ -175,17 +175,17 @@ public class EditModuleScreen extends Screen {
         super.render(context, mouseX, mouseY, delta);
 
         context.drawCenteredTextWithShadow(this.textRenderer,
-                Text.literal("§6§lEdit Module"), this.width / 2, 15, 0xFFFFFF);
+                Text.literal("§6§lEdit Module"), this.width / 2, 15, 0xFFFFFFFF);
         context.drawCenteredTextWithShadow(this.textRenderer,
                 Text.literal("§7Select a pack, select a module, edit and save"),
-                this.width / 2, 30, 0x888888);
+                this.width / 2, 30, 0xFF888888);
 
         int halfWidth = this.width / 2;
         int listY = 50;
         int entryHeight = 18;
 
-        context.drawTextWithShadow(this.textRenderer, Text.literal("§eDatapacks"), 20, 40, 0xFFFF55);
-        context.drawTextWithShadow(this.textRenderer, Text.literal("§bModules"), halfWidth + 10, 40, 0x55FFFF);
+        context.drawTextWithShadow(this.textRenderer, Text.literal("§eDatapacks"), 20, 40, 0xFFFFFF55);
+        context.drawTextWithShadow(this.textRenderer, Text.literal("§bModules"), halfWidth + 10, 40, 0xFF55FFFF);
 
         int maxPackVisible = Math.min(datapacks.size(), (this.height - 150) / entryHeight);
         for (int i = 0; i < maxPackVisible; i++) {
@@ -199,7 +199,7 @@ public class EditModuleScreen extends Screen {
                     selected ? 0xFF335599 : 0xFF222222);
             DatapackInfo p = datapacks.get(idx);
             String pl = (p.enabled() ? "§a● " : "§8○ ") + "§f" + p.name();
-            context.drawTextWithShadow(this.textRenderer, Text.literal(pl), 24, entryY + 4, 0xFFFFFF);
+            context.drawTextWithShadow(this.textRenderer, Text.literal(pl), 24, entryY + 4, 0xFFFFFFFF);
         }
 
         int maxModVisible = Math.min(modules.size(), (this.height - 150) / entryHeight);
@@ -213,16 +213,16 @@ public class EditModuleScreen extends Screen {
             context.fill(halfWidth + 10, entryY, this.width - 20, entryY + entryHeight - 2,
                     selected ? 0xFF335599 : 0xFF222222);
             context.drawTextWithShadow(this.textRenderer,
-                    Text.literal("§f" + modules.get(idx)), halfWidth + 14, entryY + 4, 0xFFFFFF);
+                    Text.literal("§f" + modules.get(idx)), halfWidth + 14, entryY + 4, 0xFFFFFFFF);
         }
 
         if (modules.isEmpty() && selectedPackIndex >= 0) {
             context.drawTextWithShadow(this.textRenderer,
-                    Text.literal("§7No modules"), halfWidth + 14, listY + 4, 0x888888);
+                    Text.literal("§7No modules"), halfWidth + 14, listY + 4, 0xFF888888);
         }
 
         int inputY = this.height - 90;
-        context.drawTextWithShadow(this.textRenderer, Text.literal("§fContent:"), this.width / 2 - 150, inputY - 12, 0xFFFFFF);
+        context.drawTextWithShadow(this.textRenderer, Text.literal("§fContent:"), this.width / 2 - 150, inputY - 12, 0xFFFFFFFF);
 
         if (processing) {
             progressOverlay.render(context, this.width, this.height);

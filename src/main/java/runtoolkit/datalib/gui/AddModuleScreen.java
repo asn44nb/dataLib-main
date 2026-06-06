@@ -137,10 +137,10 @@ public class AddModuleScreen extends Screen {
         super.render(context, mouseX, mouseY, delta);
 
         context.drawCenteredTextWithShadow(this.textRenderer,
-                Text.literal("§b§lAdd Module / mcfunction"), this.width / 2, 15, 0xFFFFFF);
+                Text.literal("§b§lAdd Module / mcfunction"), this.width / 2, 15, 0xFFFFFFFF);
         context.drawCenteredTextWithShadow(this.textRenderer,
                 Text.literal("§7Select a datapack, enter module name and content"),
-                this.width / 2, 30, 0x888888);
+                this.width / 2, 30, 0xFF888888);
 
         int listX = this.width / 2 - 120;
         int listY = 50;
@@ -159,12 +159,12 @@ public class AddModuleScreen extends Screen {
                     selected ? 0xFF335599 : 0xFF222222);
 
             String label = (pack.enabled() ? "§a● " : "§8○ ") + "§f" + pack.name();
-            context.drawTextWithShadow(this.textRenderer, Text.literal(label), listX + 4, entryY + 4, 0xFFFFFF);
+            context.drawTextWithShadow(this.textRenderer, Text.literal(label), listX + 4, entryY + 4, 0xFFFFFFFF);
         }
 
         int inputY = this.height / 2 + 20;
-        context.drawTextWithShadow(this.textRenderer, Text.literal("§fModule Name:"), this.width / 2 - 100, inputY - 12, 0xFFFFFF);
-        context.drawTextWithShadow(this.textRenderer, Text.literal("§fContent (mcfunction):"), this.width / 2 - 100, inputY + 18, 0xFFFFFF);
+        context.drawTextWithShadow(this.textRenderer, Text.literal("§fModule Name:"), this.width / 2 - 100, inputY - 12, 0xFFFFFFFF);
+        context.drawTextWithShadow(this.textRenderer, Text.literal("§fContent (mcfunction):"), this.width / 2 - 100, inputY + 18, 0xFFFFFFFF);
 
         if (processing) {
             progressOverlay.render(context, this.width, this.height);

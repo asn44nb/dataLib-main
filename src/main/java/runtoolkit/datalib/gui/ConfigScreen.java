@@ -88,16 +88,16 @@ public class ConfigScreen extends Screen {
         super.render(context, mouseX, mouseY, delta);
 
         context.drawCenteredTextWithShadow(this.textRenderer,
-                Text.literal("§7§lDataLib Configuration"), this.width / 2, 15, 0xFFFFFF);
+                Text.literal("§7§lDataLib Configuration"), this.width / 2, 15, 0xFFFFFFFF);
         context.drawCenteredTextWithShadow(this.textRenderer,
-                Text.literal("§7Click a setting to edit its value"), this.width / 2, 30, 0x888888);
+                Text.literal("§7Click a setting to edit its value"), this.width / 2, 30, 0xFF888888);
 
         int listX = this.width / 2 - 150;
         int listY = 55;
         int entryHeight = 22;
 
-        context.drawTextWithShadow(this.textRenderer, Text.literal("§eKey"), listX, 44, 0xFFFF55);
-        context.drawTextWithShadow(this.textRenderer, Text.literal("§bValue"), listX + 160, 44, 0x55FFFF);
+        context.drawTextWithShadow(this.textRenderer, Text.literal("§eKey"), listX, 44, 0xFFFFFF55);
+        context.drawTextWithShadow(this.textRenderer, Text.literal("§bValue"), listX + 160, 44, 0xFF55FFFF);
 
         for (int i = 0; i < entries.size(); i++) {
             Map.Entry<String, String> entry = entries.get(i);
@@ -108,13 +108,13 @@ public class ConfigScreen extends Screen {
                     selected ? 0xFF335599 : 0xFF222222);
 
             context.drawTextWithShadow(this.textRenderer,
-                    Text.literal("§f" + entry.getKey()), listX + 4, entryY + 5, 0xFFFFFF);
+                    Text.literal("§f" + entry.getKey()), listX + 4, entryY + 5, 0xFFFFFFFF);
             context.drawTextWithShadow(this.textRenderer,
-                    Text.literal("§b" + entry.getValue()), listX + 164, entryY + 5, 0x55FFFF);
+                    Text.literal("§b" + entry.getValue()), listX + 164, entryY + 5, 0xFF55FFFF);
         }
 
         context.drawTextWithShadow(this.textRenderer, Text.literal("§fNew Value:"),
-                this.width / 2 - 100, this.height - 102, 0xFFFFFF);
+                this.width / 2 - 100, this.height - 102, 0xFFFFFFFF);
     }
 
     @Override

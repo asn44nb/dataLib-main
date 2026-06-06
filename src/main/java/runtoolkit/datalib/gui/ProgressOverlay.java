@@ -59,7 +59,7 @@ public class ProgressOverlay {
         String title = error ? "§cError!" : (completed ? "§aCompleted!" : "§eProcessing...");
         context.drawCenteredTextWithShadow(
                 net.minecraft.client.MinecraftClient.getInstance().textRenderer,
-                Text.literal(title), screenWidth / 2, y - 20, 0xFFFFFF
+                Text.literal(title), screenWidth / 2, y - 20, 0xFFFFFFFF
         );
 
         // Progress bar background
@@ -75,14 +75,14 @@ public class ProgressOverlay {
         String percent = String.format("%.0f%%", progress * 100);
         context.drawCenteredTextWithShadow(
                 net.minecraft.client.MinecraftClient.getInstance().textRenderer,
-                Text.literal(percent), screenWidth / 2, y + 4, 0xFFFFFF
+                Text.literal(percent), screenWidth / 2, y + 4, 0xFFFFFFFF
         );
 
         // Message
         if (message != null && !message.isEmpty()) {
             context.drawCenteredTextWithShadow(
                     net.minecraft.client.MinecraftClient.getInstance().textRenderer,
-                    Text.literal(message), screenWidth / 2, y + barHeight + 8, 0xCCCCCC
+                    Text.literal(message), screenWidth / 2, y + barHeight + 8, 0xFFCCCCCC
             );
         }
     }

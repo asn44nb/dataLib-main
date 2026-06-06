@@ -77,9 +77,9 @@ public class DataLibMainScreen extends Screen {
 
         // Title drawn AFTER super.render so it appears on top of widgets
         context.drawCenteredTextWithShadow(this.textRenderer,
-                Text.literal("§b§lDataLib §7— §fDatapack Framework Manager"), this.width / 2, 20, 0xFFFFFF);
+                Text.literal("§b§lDataLib §7— §fDatapack Framework Manager"), this.width / 2, 20, 0xFFFFFFFF);
         context.drawCenteredTextWithShadow(this.textRenderer,
-                Text.literal("§7v6.0.0 for Minecraft 1.21.8"), this.width / 2, 34, 0x888888);
+                Text.literal("§7v6.0.0 for Minecraft 1.21.8"), this.width / 2, 34, 0xFF888888);
     }
 
     @Override

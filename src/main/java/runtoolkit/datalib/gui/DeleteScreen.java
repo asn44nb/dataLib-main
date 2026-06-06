@@ -211,16 +211,16 @@ public class DeleteScreen extends Screen {
         super.render(context, mouseX, mouseY, delta);
 
         context.drawCenteredTextWithShadow(this.textRenderer,
-                Text.literal("§c§lDelete — §f" + currentMode.label), this.width / 2, 15, 0xFFFFFF);
+                Text.literal("§c§lDelete — §f" + currentMode.label), this.width / 2, 15, 0xFFFFFFFF);
         context.drawCenteredTextWithShadow(this.textRenderer,
                 Text.literal("§7Select target and confirm deletion"),
-                this.width / 2, 30, 0x888888);
+                this.width / 2, 30, 0xFF888888);
 
         int halfWidth = this.width / 2;
         int listY = 75;
         int entryHeight = 18;
 
-        context.drawTextWithShadow(this.textRenderer, Text.literal("§eDatapacks"), 20, 65, 0xFFFF55);
+        context.drawTextWithShadow(this.textRenderer, Text.literal("§eDatapacks"), 20, 65, 0xFFFFFF55);
 
         int maxPackVisible = Math.min(datapacks.size(), (this.height - 140) / entryHeight);
         for (int i = 0; i < maxPackVisible; i++) {
@@ -238,11 +238,11 @@ public class DeleteScreen extends Screen {
             if (pack.managed()) label += "§a[M] ";
             label += "§f" + pack.name();
             if (pack.hasDataLibDependency()) label += " §b[DL]";
-            context.drawTextWithShadow(this.textRenderer, Text.literal(label), 24, entryY + 4, 0xFFFFFF);
+            context.drawTextWithShadow(this.textRenderer, Text.literal(label), 24, entryY + 4, 0xFFFFFFFF);
         }
 
         if (currentMode == DeleteMode.MODULE) {
-            context.drawTextWithShadow(this.textRenderer, Text.literal("§bModules"), halfWidth + 10, 65, 0x55FFFF);
+            context.drawTextWithShadow(this.textRenderer, Text.literal("§bModules"), halfWidth + 10, 65, 0xFF55FFFF);
 
             int maxModVisible = Math.min(modules.size(), (this.height - 140) / entryHeight);
             for (int i = 0; i < maxModVisible; i++) {
@@ -255,12 +255,12 @@ public class DeleteScreen extends Screen {
                 context.fill(halfWidth + 10, entryY, this.width - 20, entryY + entryHeight - 2,
                         selected ? 0xFF993333 : 0xFF222222);
                 context.drawTextWithShadow(this.textRenderer,
-                        Text.literal("§f" + modules.get(idx)), halfWidth + 14, entryY + 4, 0xFFFFFF);
+                        Text.literal("§f" + modules.get(idx)), halfWidth + 14, entryY + 4, 0xFFFFFFFF);
             }
 
             if (modules.isEmpty() && selectedPackIndex >= 0) {
                 context.drawTextWithShadow(this.textRenderer,
-                        Text.literal("§7No modules"), halfWidth + 14, listY + 4, 0x888888);
+                        Text.literal("§7No modules"), halfWidth + 14, listY + 4, 0xFF888888);
             }
         }
 
@@ -273,7 +273,7 @@ public class DeleteScreen extends Screen {
             }
             context.drawCenteredTextWithShadow(this.textRenderer,
                     Text.literal("§c⚠ Click Delete again to confirm: §f" + target),
-                    this.width / 2, this.height - 60, 0xFF5555);
+                    this.width / 2, this.height - 60, 0xFFFF5555);
         }
 
         if (processing) {

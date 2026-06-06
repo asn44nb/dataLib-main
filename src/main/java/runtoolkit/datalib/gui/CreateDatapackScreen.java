@@ -87,12 +87,12 @@ public class CreateDatapackScreen extends Screen {
         super.render(context, mouseX, mouseY, delta);
 
         context.drawCenteredTextWithShadow(this.textRenderer,
-                Text.literal("§a§lCreate Datapack"), this.width / 2, 20, 0xFFFFFF);
+                Text.literal("§a§lCreate Datapack"), this.width / 2, 20, 0xFFFFFFFF);
 
         int centerX = this.width / 2;
         int startY = this.height / 4;
-        context.drawTextWithShadow(this.textRenderer, Text.literal("§fPack Name:"), centerX - 100, startY - 12, 0xFFFFFF);
-        context.drawTextWithShadow(this.textRenderer, Text.literal("§fDescription:"), centerX - 100, startY + 28, 0xFFFFFF);
+        context.drawTextWithShadow(this.textRenderer, Text.literal("§fPack Name:"), centerX - 100, startY - 12, 0xFFFFFFFF);
+        context.drawTextWithShadow(this.textRenderer, Text.literal("§fDescription:"), centerX - 100, startY + 28, 0xFFFFFFFF);
 
         if (processing) {
             progressOverlay.render(context, this.width, this.height);

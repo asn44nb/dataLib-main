@@ -120,10 +120,10 @@ public class AddDependencyScreen extends Screen {
         super.render(context, mouseX, mouseY, delta);
 
         context.drawCenteredTextWithShadow(this.textRenderer,
-                Text.literal("§e§lAdd DataLib Dependency"), this.width / 2, 15, 0xFFFFFF);
+                Text.literal("§e§lAdd DataLib Dependency"), this.width / 2, 15, 0xFFFFFFFF);
         context.drawCenteredTextWithShadow(this.textRenderer,
                 Text.literal("§7Select a datapack and confirm to add datalib:engine dependency"),
-                this.width / 2, 30, 0x888888);
+                this.width / 2, 30, 0xFF888888);
 
         int listX = this.width / 2 - 120;
         int listY = 60;
@@ -132,7 +132,7 @@ public class AddDependencyScreen extends Screen {
 
         if (datapacks.isEmpty()) {
             context.drawCenteredTextWithShadow(this.textRenderer,
-                    Text.literal("§7No datapacks found. Create one first!"), this.width / 2, listY + 20, 0xAAAAAA);
+                    Text.literal("§7No datapacks found. Create one first!"), this.width / 2, listY + 20, 0xFFAAAAAA);
         }
 
         for (int i = 0; i < maxVisible; i++) {
@@ -149,13 +149,13 @@ public class AddDependencyScreen extends Screen {
             String label = (pack.enabled() ? "§a● " : "§8○ ");
             label += (pack.managed() ? "§a[M] " : "§7[U] ") + "§f" + pack.name();
             if (pack.hasDataLibDependency()) label += " §b[DL]";
-            context.drawTextWithShadow(this.textRenderer, Text.literal(label), listX + 4, entryY + 5, 0xFFFFFF);
+            context.drawTextWithShadow(this.textRenderer, Text.literal(label), listX + 4, entryY + 5, 0xFFFFFFFF);
         }
 
         if (confirmMode && selectedIndex >= 0 && selectedIndex < datapacks.size()) {
             context.drawCenteredTextWithShadow(this.textRenderer,
                     Text.literal("§eClick 'Add Dependency' again to confirm for: §b" + datapacks.get(selectedIndex).name()),
-                    this.width / 2, this.height - 60, 0xFFFF55);
+                    this.width / 2, this.height - 60, 0xFFFFFF55);
         }
 
         if (processing) {
