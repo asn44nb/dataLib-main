@@ -4,6 +4,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import net.minecraft.resource.ResourcePackManager;
+import net.minecraft.resource.ResourcePackProfile;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.WorldSavePath;
 import runtoolkit.datalib.core.DataLibCore;
@@ -11,9 +13,7 @@ import runtoolkit.datalib.core.DataLibCore;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 /**
  * Generates and manages datapacks at runtime via the mod's GUI.
@@ -448,30 +448,110 @@ public class DatapackGenerator {
         return modules;
     }
 
+    /**
+     * Lists all datapacks from two sources and merges them:
+     *   1. Server's DataPackManager — all packs the server knows about (enabled + available)
+     *   2. World datapacks/ folder — any folder/zip that might not yet be loaded
+     *
+     * Deduplicates by name. Server-known packs take priority for "enabled" status.
+     */
     public static List<DatapackInfo> listDatapacks(MinecraftServer server) {
-        List<DatapackInfo> packs = new ArrayList<>();
-        Path datapacksDir = server.getSavePath(WorldSavePath.DATAPACKS);
+        Map<String, DatapackInfo> packMap = new LinkedHashMap<>();
 
-        if (!Files.exists(datapacksDir)) return packs;
+        // ── Source 1: Server DataPackManager (enabled + available) ──
+        try {
+            ResourcePackManager rpm = server.getDataPackManager();
 
-        try (var stream = Files.list(datapacksDir)) {
-            stream.filter(Files::isDirectory).forEach(dir -> {
-                String name = dir.getFileName().toString();
-                boolean managed = Files.exists(dir.resolve(".datalib_managed"));
-                boolean hasDep = false;
-                if (managed) {
-                    try {
-                        String m = Files.readString(dir.resolve(".datalib_managed"));
-                        hasDep = m.contains("datalib_dependency=true");
-                    } catch (IOException ignored) {}
+            // Enabled packs
+            for (ResourcePackProfile profile : rpm.getEnabledProfiles()) {
+                String id = profile.getId();
+                // Skip built-in packs (vanilla, fabric, mod-provided, etc.)
+                if (isBuiltinPack(id)) continue;
+                String displayName = stripFilePrefix(id);
+                packMap.put(displayName, buildInfo(server, displayName, true));
+            }
+
+            // Available but not enabled
+            for (ResourcePackProfile profile : rpm.getProfiles()) {
+                String id = profile.getId();
+                if (isBuiltinPack(id)) continue;
+                String displayName = stripFilePrefix(id);
+                if (!packMap.containsKey(displayName)) {
+                    packMap.put(displayName, buildInfo(server, displayName, false));
                 }
-                packs.add(new DatapackInfo(name, managed, hasDep));
-            });
-        } catch (IOException e) {
-            DataLibCore.LOGGER.error("[DataLib] Failed to list datapacks", e);
+            }
+        } catch (Exception e) {
+            DataLibCore.LOGGER.warn("[DataLib] Could not query DataPackManager", e);
         }
 
-        return packs;
+        // ── Source 2: World datapacks/ folder on disk ──
+        Path datapacksDir = server.getSavePath(WorldSavePath.DATAPACKS);
+        if (Files.exists(datapacksDir)) {
+            try (var stream = Files.list(datapacksDir)) {
+                stream.forEach(entry -> {
+                    String name = entry.getFileName().toString();
+                    // Accept directories and .zip files
+                    boolean isDir = Files.isDirectory(entry);
+                    boolean isZip = name.endsWith(".zip");
+                    if (!isDir && !isZip) return;
+
+                    // Strip .zip for display
+                    String displayName = isZip ? name.substring(0, name.length() - 4) : name;
+
+                    if (!packMap.containsKey(displayName)) {
+                        packMap.put(displayName, buildInfo(server, displayName, false));
+                    }
+                });
+            } catch (IOException e) {
+                DataLibCore.LOGGER.error("[DataLib] Failed to scan datapacks folder", e);
+            }
+        }
+
+        return new ArrayList<>(packMap.values());
+    }
+
+    /**
+     * Returns true for pack IDs that represent built-in / mod-provided packs
+     * that should NOT appear in the user-facing datapack list.
+     */
+    private static boolean isBuiltinPack(String id) {
+        // vanilla, fabric, mod resource packs
+        if (id.equals("vanilla") || id.equals("fabric")) return true;
+        // Fabric mod-provided packs are prefixed with "fabric/" or the mod id
+        if (id.startsWith("fabric/")) return true;
+        // Mod-jar resource packs (e.g., "mod:lithium", "mod:sodium")
+        if (id.startsWith("mod:")) return true;
+        // Bundled feature packs
+        if (id.startsWith("feature/")) return true;
+        return false;
+    }
+
+    /**
+     * Strips "file/" prefix that Minecraft adds to world-folder datapacks.
+     */
+    private static String stripFilePrefix(String id) {
+        if (id.startsWith("file/")) return id.substring(5);
+        return id;
+    }
+
+    /**
+     * Builds a DatapackInfo by checking the .datalib_managed marker on disk.
+     */
+    private static DatapackInfo buildInfo(MinecraftServer server, String name, boolean enabled) {
+        Path packDir = server.getSavePath(WorldSavePath.DATAPACKS).resolve(name);
+        boolean managed = false;
+        boolean hasDep = false;
+
+        Path marker = packDir.resolve(".datalib_managed");
+        if (Files.exists(marker)) {
+            managed = true;
+            try {
+                String content = Files.readString(marker);
+                hasDep = content.contains("datalib_dependency=true");
+            } catch (IOException ignored) {}
+        }
+
+        return new DatapackInfo(name, managed, hasDep, enabled);
     }
 
     public static String readModule(MinecraftServer server, String packName, String moduleName) {
@@ -547,7 +627,7 @@ public class DatapackGenerator {
         }
     }
 
-    public record DatapackInfo(String name, boolean managed, boolean hasDataLibDependency) {}
+    public record DatapackInfo(String name, boolean managed, boolean hasDataLibDependency, boolean enabled) {}
 
     @FunctionalInterface
     public interface ProgressCallback {

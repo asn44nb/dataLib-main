@@ -197,8 +197,9 @@ public class EditModuleScreen extends Screen {
 
             context.fill(20, entryY, halfWidth - 10, entryY + entryHeight - 2,
                     selected ? 0xFF335599 : 0xFF222222);
-            context.drawTextWithShadow(this.textRenderer,
-                    Text.literal("§f" + datapacks.get(idx).name()), 24, entryY + 4, 0xFFFFFF);
+            DatapackInfo p = datapacks.get(idx);
+            String pl = (p.enabled() ? "§a● " : "§8○ ") + "§f" + p.name();
+            context.drawTextWithShadow(this.textRenderer, Text.literal(pl), 24, entryY + 4, 0xFFFFFF);
         }
 
         int maxModVisible = Math.min(modules.size(), (this.height - 150) / entryHeight);

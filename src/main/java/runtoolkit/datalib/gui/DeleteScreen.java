@@ -234,9 +234,10 @@ public class DeleteScreen extends Screen {
             context.fill(20, entryY, halfWidth - 10, entryY + entryHeight - 2,
                     selected ? 0xFF993333 : 0xFF222222);
 
-            String label = "§f" + pack.name();
+            String label = (pack.enabled() ? "§a● " : "§8○ ");
+            if (pack.managed()) label += "§a[M] ";
+            label += "§f" + pack.name();
             if (pack.hasDataLibDependency()) label += " §b[DL]";
-            if (pack.managed()) label = "§a[M] " + label;
             context.drawTextWithShadow(this.textRenderer, Text.literal(label), 24, entryY + 4, 0xFFFFFF);
         }
 

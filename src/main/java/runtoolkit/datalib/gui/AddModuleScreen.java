@@ -158,7 +158,7 @@ public class AddModuleScreen extends Screen {
             context.fill(listX, entryY, listX + 240, entryY + entryHeight - 2,
                     selected ? 0xFF335599 : 0xFF222222);
 
-            String label = "§f" + pack.name();
+            String label = (pack.enabled() ? "§a● " : "§8○ ") + "§f" + pack.name();
             context.drawTextWithShadow(this.textRenderer, Text.literal(label), listX + 4, entryY + 4, 0xFFFFFF);
         }
 

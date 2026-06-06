@@ -146,7 +146,8 @@ public class AddDependencyScreen extends Screen {
             context.fill(listX, entryY, listX + 240, entryY + entryHeight - 2,
                     selected ? 0xFF335599 : 0xFF222222);
 
-            String label = (pack.managed() ? "§a[M] " : "§7[U] ") + "§f" + pack.name();
+            String label = (pack.enabled() ? "§a● " : "§8○ ");
+            label += (pack.managed() ? "§a[M] " : "§7[U] ") + "§f" + pack.name();
             if (pack.hasDataLibDependency()) label += " §b[DL]";
             context.drawTextWithShadow(this.textRenderer, Text.literal(label), listX + 4, entryY + 5, 0xFFFFFF);
         }
